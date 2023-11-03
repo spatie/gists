@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Console\Commands;
+
 use Illuminate\Console\Command;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Database\QueryException;
