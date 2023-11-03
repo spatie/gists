@@ -1,1 +1,2 @@
-# gists
+# A collection of our gists
+
