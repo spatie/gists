@@ -90,6 +90,11 @@ return new class extends \Illuminate\Database\Migrations\Migration
         });
 
         Schema::table('mailcoach_sends', function (Blueprint $table) {
+            $table->dropIndex('mailcoach_sends_campaign_id_subscriber_id_index');
+            $table->dropForeign('campaign_id');
+            $table->dropForeign('automation_mail_id');
+            $table->dropForeign('transactional_mail_log_item_id');
+
             $table->dropColumn([
                 'campaign_id',
                 'automation_mail_id',
