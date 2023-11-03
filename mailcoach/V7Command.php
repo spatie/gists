@@ -11,7 +11,7 @@ use Spatie\Mailcoach\Domain\ConditionBuilder\Enums\ComparisonOperator;
 use Spatie\Mailcoach\Domain\TransactionalMail\Models\TransactionalMail;
 use Spatie\Mailcoach\Domain\TransactionalMail\Models\TransactionalMailLogItem;
 
-class MigrateToV7Command extends Command
+class V7Command extends Command
 {
     protected $signature = 'app:migrate-to-v7';
 
