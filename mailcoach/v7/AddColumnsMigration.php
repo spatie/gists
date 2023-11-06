@@ -186,4 +186,39 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-}
+
+    public function down(): void
+    {
+        // Drop the tables that were created
+        Schema::dropIfExists('mailcoach_suppressions');
+        Schema::dropIfExists('mailcoach_subscriber_exports');
+        Schema::dropIfExists('mailcoach_unsubscribes');
+        Schema::dropIfExists('mailcoach_opens');
+        Schema::dropIfExists('mailcoach_clicks');
+        Schema::dropIfExists('mailcoach_links');
+        Schema::dropIfExists('mailcoach_content_items');
+
+        // Drop columns that were added to existing tables
+        Schema::table('mailcoach_transactional_mail_log_items', function (Blueprint $table) {
+            $table->dropColumn('fake');
+        });
+
+        Schema::table('mailcoach_sends', function (Blueprint $table) {
+            $table->dropColumn('content_item_id');
+        });
+
+        Schema::table('mailcoach_campaigns', function (Blueprint $table) {
+            $table->dropColumn([
+                'disable_webview',
+                'split_test_wait_time_in_minutes',
+                'split_test_split_size_percentage',
+                'split_test_started_at',
+                'split_test_winning_content_item_id'
+            ]);
+        });
+
+        Schema::table('mailcoach_segments', function (Blueprint $table) {
+            $table->dropColumn('stored_conditions');
+        });
+    }
+};

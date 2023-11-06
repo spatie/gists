@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Database\QueryException;
@@ -247,7 +248,7 @@ class AddColumnsCommand extends Command
                     ! is_null($row->campaign_id) => DB::table('mailcoach_content_items')->where('model_id', $row->campaign_id)->where('model_type', (new Campaign)->getMorphClass())->first(),
                     ! is_null($row->automation_mail_id) => DB::table('mailcoach_content_items')->where('model_id', $row->automation_mail_id)->where('model_type', (new AutomationMail)->getMorphClass())->first(),
                     ! is_null($row->transactional_mail_log_item_id) => DB::table('mailcoach_content_items')->where('model_id', $row->transactional_mail_log_item_id)->where('model_type', (new TransactionalMailLogItem)->getMorphClass())->first(),
-                    default => throw new Exception('This send has no destination'),
+                    default => false,
                 };
 
                 if ($contentItem) {

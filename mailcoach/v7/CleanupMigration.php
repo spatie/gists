@@ -117,4 +117,4 @@ return new class extends \Illuminate\Database\Migrations\Migration
         Schema::drop('mailcoach_transactional_mail_clicks');
         Schema::drop('mailcoach_transactional_mail_opens');
     }
-}
+};
