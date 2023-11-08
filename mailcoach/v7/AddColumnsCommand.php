@@ -2,10 +2,7 @@
 
 namespace App\Console\Commands;
 
-use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Database\Query\JoinClause;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Spatie\Mailcoach\Domain\Automation\Models\AutomationMail;
@@ -14,7 +11,7 @@ use Spatie\Mailcoach\Domain\ConditionBuilder\Enums\ComparisonOperator;
 use Spatie\Mailcoach\Domain\TransactionalMail\Models\TransactionalMail;
 use Spatie\Mailcoach\Domain\TransactionalMail\Models\TransactionalMailLogItem;
 
-class AddColumnsCommand extends Command
+class MigrateToV7Command extends Command
 {
     protected $signature = 'app:migrate-to-v7';
 
@@ -40,8 +37,8 @@ class AddColumnsCommand extends Command
 
     public function migrateSegments(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_segments')->count());
         $this->getOutput()->writeln('Migrating segments');
+        $this->getOutput()->progressStart(DB::table('mailcoach_segments')->count());
 
         DB::table('mailcoach_segments')->lazyById()->each(function ($segment) {
             $positiveTags = DB::table('mailcoach_positive_segment_tags')->where('segment_id', $segment->id)->get();
@@ -83,8 +80,8 @@ class AddColumnsCommand extends Command
 
     public function migrateCampaigns(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_campaigns')->count());
         $this->getOutput()->writeln('Migrating campaigns');
+        $this->getOutput()->progressStart(DB::table('mailcoach_campaigns')->count());
 
         DB::table('mailcoach_campaigns')->lazyById()->each(function ($row) {
             DB::table('mailcoach_content_items')->insert([
@@ -136,8 +133,8 @@ class AddColumnsCommand extends Command
 
     public function migrateAutomationMails(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_automation_mails')->count());
         $this->getOutput()->writeln('Migrating automation mails');
+        $this->getOutput()->progressStart(DB::table('mailcoach_automation_mails')->count());
 
         DB::table('mailcoach_automation_mails')->lazyById()->each(function ($row) {
             DB::table('mailcoach_content_items')->insert([
@@ -189,8 +186,8 @@ class AddColumnsCommand extends Command
 
     public function migrateTransactionalMails(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_transactional_mails')->count());
         $this->getOutput()->writeln('Migrating transactional mails');
+        $this->getOutput()->progressStart(DB::table('mailcoach_transactional_mails')->count());
 
         DB::table('mailcoach_transactional_mails')
             ->lazyById()
@@ -213,8 +210,8 @@ class AddColumnsCommand extends Command
 
     public function migrateTransactionalMailLogItems(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_transactional_mail_log_items')->count());
         $this->getOutput()->writeln('Migrating transactional mail log items');
+        $this->getOutput()->progressStart(DB::table('mailcoach_transactional_mail_log_items')->count());
 
         DB::table('mailcoach_transactional_mail_log_items')
             ->lazyById()
@@ -237,8 +234,8 @@ class AddColumnsCommand extends Command
 
     public function migrateSends(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_sends')->whereNull('content_item_id')->count());
         $this->getOutput()->writeln('Migrating sends');
+        $this->getOutput()->progressStart(DB::table('mailcoach_sends')->whereNull('content_item_id')->count());
 
         DB::table('mailcoach_sends')
             ->whereNull('content_item_id')
@@ -263,8 +260,8 @@ class AddColumnsCommand extends Command
 
     public function migrateCampaignOpens(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_campaign_opens')->count());
         $this->getOutput()->writeln('Migrating campaign opens');
+        $this->getOutput()->progressStart(DB::table('mailcoach_campaign_opens')->count());
 
         DB::table('mailcoach_campaign_opens')
             ->join('mailcoach_content_items', 'mailcoach_content_items.model_id', '=', 'mailcoach_campaign_opens.campaign_id')
@@ -290,8 +287,8 @@ class AddColumnsCommand extends Command
 
     public function migrateCampaignLinks(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_campaign_links')->count());
         $this->getOutput()->writeln('Migrating campaign links');
+        $this->getOutput()->progressStart(DB::table('mailcoach_campaign_links')->count());
 
         DB::table('mailcoach_campaign_links')
             ->join('mailcoach_content_items', 'mailcoach_content_items.model_id', '=', 'mailcoach_campaign_links.campaign_id')
@@ -332,8 +329,8 @@ class AddColumnsCommand extends Command
 
     public function migrateCampaignUnsubscribes(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_campaign_unsubscribes')->count());
         $this->getOutput()->writeln('Migrating campaign unsubscribes');
+        $this->getOutput()->progressStart(DB::table('mailcoach_campaign_unsubscribes')->count());
 
         DB::table('mailcoach_campaign_unsubscribes')
             ->join('mailcoach_content_items', 'mailcoach_content_items.model_id', '=', 'mailcoach_campaign_unsubscribes.campaign_id')
@@ -358,8 +355,8 @@ class AddColumnsCommand extends Command
 
     public function migrateAutomationMailOpens(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_automation_mail_opens')->count());
         $this->getOutput()->writeln('Migrating automation mail opens');
+        $this->getOutput()->progressStart(DB::table('mailcoach_automation_mail_opens')->count());
 
         DB::table('mailcoach_automation_mail_opens')
             ->join('mailcoach_content_items', 'mailcoach_content_items.model_id', '=', 'mailcoach_automation_mail_opens.automation_mail_id')
@@ -388,8 +385,8 @@ class AddColumnsCommand extends Command
 
     public function migrateAutomationMailLinks(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_automation_mail_links')->count());
         $this->getOutput()->writeln('Migrating automation mail links');
+        $this->getOutput()->progressStart(DB::table('mailcoach_automation_mail_links')->count());
 
         DB::table('mailcoach_automation_mail_links')
             ->join('mailcoach_content_items', 'mailcoach_content_items.model_id', '=', 'mailcoach_automation_mail_links.automation_mail_id')
@@ -430,8 +427,8 @@ class AddColumnsCommand extends Command
 
     public function migrateAutomationMailUnsubscribes(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_automation_mail_unsubscribes')->count());
         $this->getOutput()->writeln('Migrating automation mail unsubscribes');
+        $this->getOutput()->progressStart(DB::table('mailcoach_automation_mail_unsubscribes')->count());
 
         DB::table('mailcoach_automation_mail_unsubscribes')
             ->join('mailcoach_content_items', 'mailcoach_content_items.model_id', '=', 'mailcoach_automation_mail_unsubscribes.automation_mail_id')
@@ -456,8 +453,8 @@ class AddColumnsCommand extends Command
 
     public function migrateTransactionalMailOpens(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_transactional_mail_opens')->count());
         $this->getOutput()->writeln('Migrating transactional mail opens');
+        $this->getOutput()->progressStart(DB::table('mailcoach_transactional_mail_opens')->count());
 
         DB::table('mailcoach_transactional_mail_opens')
             ->lazyById()
@@ -480,8 +477,8 @@ class AddColumnsCommand extends Command
 
     public function migrateTransactionalMailClicks(): void
     {
-        $this->getOutput()->progressStart(DB::table('mailcoach_transactional_mail_clicks')->count());
         $this->getOutput()->writeln('Migrating transactional_mail_clicks');
+        $this->getOutput()->progressStart(DB::table('mailcoach_transactional_mail_clicks')->count());
 
         DB::table('mailcoach_transactional_mail_clicks')
             ->join('mailcoach_sends', 'mailcoach_sends.id', '=', 'mailcoach_transactional_mail_clicks.send_id')
