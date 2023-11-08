@@ -90,31 +90,25 @@ return new class extends \Illuminate\Database\Migrations\Migration
         });
 
         Schema::table('mailcoach_sends', function (Blueprint $table) {
-            $table->dropIndex('mailcoach_sends_campaign_id_subscriber_id_index');
-            $table->dropForeign('campaign_id');
-            $table->dropForeign('automation_mail_id');
-            $table->dropForeign('transactional_mail_log_item_id');
-
-            $table->dropColumn([
-                'campaign_id',
-                'automation_mail_id',
-                'transactional_mail_log_item_id',
-            ]);
+            $table->dropConstrainedForeignId('campaign_id');
+            $table->dropConstrainedForeignId('automation_mail_id');
+            $table->dropConstrainedForeignId('transactional_mail_log_item_id');
+            $table->renameIndex('mailcoach_sends_campaign_id_subscriber_id_index', 'mailcoach_sends_subscriber_id_index');
         });
 
-        Schema::drop('mailcoach_positive_segment_tags');
-        Schema::drop('mailcoach_negative_segment_tags');
+        Schema::dropIfExists('mailcoach_positive_segment_tags');
+        Schema::dropIfExists('mailcoach_negative_segment_tags');
 
-        Schema::drop('mailcoach_campaign_links');
-        Schema::drop('mailcoach_campaign_clicks');
-        Schema::drop('mailcoach_campaign_opens');
-        Schema::drop('mailcoach_campaign_unsubscribes');
-        Schema::drop('mailcoach_automation_mail_links');
-        Schema::drop('mailcoach_automation_mail_clicks');
-        Schema::drop('mailcoach_automation_mail_opens');
-        Schema::drop('mailcoach_automation_mail_unsubscribes');
+        Schema::dropIfExists('mailcoach_campaign_clicks');
+        Schema::dropIfExists('mailcoach_campaign_links');
+        Schema::dropIfExists('mailcoach_campaign_opens');
+        Schema::dropIfExists('mailcoach_campaign_unsubscribes');
+        Schema::dropIfExists('mailcoach_automation_mail_clicks');
+        Schema::dropIfExists('mailcoach_automation_mail_links');
+        Schema::dropIfExists('mailcoach_automation_mail_opens');
+        Schema::dropIfExists('mailcoach_automation_mail_unsubscribes');
 
-        Schema::drop('mailcoach_transactional_mail_clicks');
-        Schema::drop('mailcoach_transactional_mail_opens');
+        Schema::dropIfExists('mailcoach_transactional_mail_clicks');
+        Schema::dropIfExists('mailcoach_transactional_mail_opens');
     }
 };
