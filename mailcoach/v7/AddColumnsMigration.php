@@ -31,6 +31,7 @@ return new class extends Migration
         });
 
         Schema::table('mailcoach_transactional_mail_log_items', function (Blueprint $table) {
+            $table->text('subject')->nullable()->change();
             $table->boolean('fake')->default(false)->after('attachments');
         });
 
